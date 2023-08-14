@@ -1,0 +1,45 @@
+version: '3.8'
+name: kavatar-dev
+services:
+  kavatar-keycloak-dev:
+    container_name: kavatar-keycloak-dev-container
+    extends:
+      file: keycloak.yml
+      service: kavatar-keycloak-dev
+    networks:
+      - kravatar-dev-network
+
+  kavatar-mongodb-dev:
+    container_name: kavatar-mongo-dev-container
+    extends:
+      file: mongodb.yml
+      service: kavatar-mongodb-dev
+    networks:
+      - kravatar-dev-network
+    volumes:
+      - data:/data/db
+
+  kavatar-mongo-express-dev:
+    container_name: kavatar-mongo-express-dev-container
+    extends:
+      file: mongodb.yml
+      service: kavatar-mongo-express-dev
+    networks:
+      - kravatar-dev-network
+    depends_on:
+      - kavatar-mongodb-dev
+
+  kavatar-redis-dev:
+    container_name: kavatar-redis-dev-container
+    extends:
+      file: redis.yml
+      service: kavatar-redis-dev
+    networks:
+      - kravatar-dev-network
+
+networks:
+  kravatar-dev-network:
+    driver: bridge
+
+volumes:
+  data:
