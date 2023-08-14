@@ -1,0 +1,16 @@
+version: '3.8'
+name: redis-dev
+services:
+  kavatar-redis-dev:
+    container_name: kavatar-redis-dev-container
+    image: redis:7.0.10-alpine3.17
+    ports:
+      - 6379:6379
+    command: redis-server --loglevel warning
+    networks:
+      - kravatar-dev-network
+
+networks:
+  kravatar-dev-network:
+    driver: bridge
+
