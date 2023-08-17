@@ -1,4 +1,15 @@
+server:
+  port: 8181
+
 spring:
   config:
     activate:
       on-profile: dev
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: kavatar
+      username: root
+      password: password
+      authentication-database: admin
