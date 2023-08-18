@@ -12,8 +12,8 @@ services:
       - ./realm-config:/opt/keycloak/data/import
     environment:
       - KC_DB=dev-file
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KEYCLOAK_ADMIN=${DEFAULT_USERNAME_DEV}
+      - KEYCLOAK_ADMIN_PASSWORD=${DEFAULT_PASSWORD_DEV}
       - KC_FEATURES=scripts
       - KC_HTTP_PORT=8080
     ports:
