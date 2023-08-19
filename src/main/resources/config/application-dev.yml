@@ -10,6 +10,6 @@ spring:
       host: localhost
       port: 27017
       database: kavatar
-      username: root
+      username: admin
       password: password
       authentication-database: admin
