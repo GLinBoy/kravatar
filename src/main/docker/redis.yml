@@ -6,7 +6,7 @@ services:
     image: redis:7.0.10-alpine3.17
     ports:
       - "6379:6379"
-    command: redis-server --loglevel warning
+    command: redis-server --loglevel warning --requirepass ${DEFAULT_PASSWORD_DEV}
     networks:
       - kravatar-dev-network
 
