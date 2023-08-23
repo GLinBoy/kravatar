@@ -22,3 +22,9 @@ spring:
       client-type: lettuce #provide reactive connection
       date_format: "dd-MM-yyyy"
       time_format: "HH:mm:ss"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/oauth-realm
+          jwk-set-uri: http://localhost:8080/realms/oauth-realm/protocol/openid-connect/certs
