@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Page with Text and Description</title>
+	<style>
+		body {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			margin: 0;
+		}
+
+		.center-text {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		.description {
+			font-size: 16px;
+			text-align: center;
+			max-width: 400px;
+		}
+	</style>
+</head>
+<body>
+<div class="center-text">
+	<span th:text="Avatar"></span>
+</div>
+<div class="description">
+	<p>
+		This is a sample Thymeleaf template demonstrating how to display a centered text in the middle of the page
+		along with a description underneath it. The description contains around 25 words.
+	</p>
+</div>
+</body>
+</html>
