@@ -28,3 +28,8 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/realms/oauth-realm
           jwk-set-uri: http://localhost:8080/realms/oauth-realm/protocol/openid-connect/certs
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
