@@ -3,3 +3,8 @@ spring:
     name: Kravatar
   profiles:
     active: dev
+
+application:
+  avatars:
+    storage: file
+    path: kavatar/avatars
