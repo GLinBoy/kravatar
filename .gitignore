@@ -433,3 +433,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/kavatar/**
