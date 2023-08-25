@@ -8,6 +8,8 @@ public interface AvatarService {
 	Mono<AvatarDTO> getAvatar();
 	Mono<AvatarDTO> getAvatar(String id);
 	Mono<String> saveAvatar(Mono<FilePart> filePartMono);
-	Mono<Void> deleteAvatar(String id);
+
+	Mono<Void> deleteAvatar();
+
 	Mono<AvatarDTO> getDefaultAvatar();
 }
