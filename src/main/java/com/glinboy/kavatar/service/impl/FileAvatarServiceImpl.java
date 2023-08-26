@@ -6,6 +6,7 @@ import com.glinboy.kavatar.service.dto.AvatarDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,11 @@ import java.util.stream.Stream;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(
+	value = "application.avatars.storage",
+	havingValue = "file",
+	matchIfMissing = true
+)
 public class FileAvatarServiceImpl implements AvatarService {
 
 	private final UserInfoService userInfoService;
