@@ -66,9 +66,7 @@ public class FileAvatarServiceImpl implements AvatarService {
 		try {
 			Files.createDirectories(path);
 			return filePartMono
-				.doOnNext(fp -> log.info("Receiving File: {}", fp.filename()))
 				.flatMap(filePart -> {
-					log.info("File type: {}", filePart.headers().getContentType());
 					String[] split = filePart.filename().split("\\.");
 					String fileExtension = split[split.length - 1];
 					String filename = userInfoService.getUserInfo().id();

@@ -2,7 +2,6 @@ package com.glinboy.kavatar.web.rest;
 
 import com.glinboy.kavatar.service.AvatarService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +15,6 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/avatars")
@@ -44,7 +42,6 @@ public class AvatarResource {
 
 	@PostMapping
 	public Mono<ResponseEntity<Void>> uploadImage(@RequestPart("file") Mono<FilePart> file, ServerWebExchange exchange) {
-		log.info("URI: {}", exchange.getRequest().getURI());
 		return service.saveAvatar(file).flatMap(filename -> {
 			String imageUrl = exchange.getRequest().getURI() + "/" + filename;
 			return Mono.just(ResponseEntity.created(URI.create(imageUrl)).build());
