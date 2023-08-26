@@ -6,5 +6,5 @@ spring:
 
 application:
   avatars:
-    storage: file
+    storage: mongo
     path: kavatar/avatars
