@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -36,9 +37,8 @@ public class FileAvatarServiceImpl implements AvatarService {
 
 	@Override
 	public Mono<Optional<AvatarDTO>> getAvatar(String id) {
-		try {
-			return Files.list(Paths.get(pathString))
-				.filter(p -> p.toFile().isFile() && p.getFileName().toString().startsWith(id))
+		try (Stream<Path> list = Files.list(Paths.get(pathString))) {
+			return list.filter(p -> p.toFile().isFile() && p.getFileName().toString().startsWith(id))
 				.findAny()
 				.map(p -> {
 					try {
@@ -83,10 +83,15 @@ public class FileAvatarServiceImpl implements AvatarService {
 
 	@Override
 	public Mono<Void> deleteAvatar() {
-		try {
-			Files.list(Paths.get(pathString))
-				.filter(p -> p.toFile().isFile() && p.getFileName().toString().startsWith(userInfoService.getUserInfo().id()))
-				.forEach(p -> p.toFile().delete());
+		try (Stream<Path> list = Files.list(Paths.get(pathString))) {
+			list.filter(p -> p.toFile().isFile() && p.getFileName().toString().startsWith(userInfoService.getUserInfo().id()))
+				.forEach(p -> {
+					try {
+						Files.delete(p);
+					} catch (IOException ex) {
+						log.error(String.format("Can not delete avatar file: %s", p), ex);
+					}
+				});
 		} catch (IOException ex) {
 			log.error("Can not delete avatar file(s)", ex);
 		}
