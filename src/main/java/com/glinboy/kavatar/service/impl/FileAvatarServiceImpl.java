@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -106,7 +107,15 @@ public class FileAvatarServiceImpl implements AvatarService {
 
 	@Override
 	public Mono<AvatarDTO> getDefaultAvatar() {
-		return null;
+		try {
+			File file = new File(this.getClass().getResource("/static/images/default_avatar.jpg").getFile());
+			return Mono.just(new AvatarDTO("00000000000000000000000000000000", Files.probeContentType(file.toPath()),
+				DataBufferUtils.read(file.toPath(), new DefaultDataBufferFactory(), getBufferSize()))
+			);
+		} catch (IOException | NullPointerException ex) {
+			log.error("Can not load default user avatar file", ex);
+		}
+		return Mono.empty();
 	}
 
 	private int getBufferSize() {
