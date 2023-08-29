@@ -6,15 +6,22 @@ import com.glinboy.kavatar.service.AvatarService;
 import com.glinboy.kavatar.service.UserInfoService;
 import com.glinboy.kavatar.service.dto.AvatarDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.Binary;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "application.avatars.storage", havingValue = "mongo")
@@ -67,6 +74,14 @@ public class MongoAvatarServiceImpl implements AvatarService {
 
 	@Override
 	public Mono<AvatarDTO> getDefaultAvatar() {
-		return null;
+		try {
+			File file = new File(this.getClass().getResource("/static/images/default_avatar.jpg").getFile());
+			return Mono.just(new AvatarDTO(userInfoService.getUserInfo().id(), Files.probeContentType(file.toPath()),
+				DataBufferUtils.read(file.toPath(), new DefaultDataBufferFactory(), 64 * 1024))
+			);
+		} catch (IOException | NullPointerException ex) {
+			log.error("Can not load default user avatar file", ex);
+		}
+		return Mono.empty();
 	}
 }
