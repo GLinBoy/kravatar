@@ -62,7 +62,7 @@ public class MongoAvatarServiceImpl implements AvatarService {
 
 	@Override
 	public Mono<Void> deleteAvatar() {
-		return null;
+		return repository.deleteById(userInfoService.getUserInfo().id());
 	}
 
 	@Override
