@@ -109,7 +109,7 @@ public class FileAvatarServiceImpl implements AvatarService {
 	public Mono<AvatarDTO> getDefaultAvatar() {
 		try {
 			File file = new File(this.getClass().getResource("/static/images/default_avatar.jpg").getFile());
-			return Mono.just(new AvatarDTO("00000000000000000000000000000000", Files.probeContentType(file.toPath()),
+			return Mono.just(new AvatarDTO(userInfoService.getUserInfo().id(), Files.probeContentType(file.toPath()),
 				DataBufferUtils.read(file.toPath(), new DefaultDataBufferFactory(), getBufferSize()))
 			);
 		} catch (IOException | NullPointerException ex) {
