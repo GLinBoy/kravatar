@@ -7,13 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,58 +36,52 @@ public class FileAvatarServiceImpl implements AvatarService {
 	private String pathString;
 
 	@Override
-	public Mono<Optional<AvatarDTO>> getAvatar() {
+	public Optional<AvatarDTO> getAvatar() {
 		return getAvatar(userInfoService.getUserInfo().id());
 	}
 
 	@Override
-	public Mono<Optional<AvatarDTO>> getAvatar(String id) {
+	public Optional<AvatarDTO> getAvatar(String id) {
 		try (Stream<Path> list = Files.list(Paths.get(pathString))) {
 			return list.filter(p -> p.toFile().isFile() && p.getFileName().toString().startsWith(id))
 				.findAny()
 				.map(p -> {
 					try {
-						return Mono.just(
-							Optional.of(
-								new AvatarDTO(id, Files.probeContentType(p),
-									DataBufferUtils.read(p, new DefaultDataBufferFactory(), getBufferSize()))
-							)
-						);
+						return Optional.of(new AvatarDTO(id, Files.probeContentType(p), Files.readAllBytes(p)));
 					} catch (IOException ex) {
 						log.error("Can not detect file type", ex);
 					}
-					return null;
-				})
-				.orElseGet(() -> Mono.just(Optional.empty()));
+					return Optional.<AvatarDTO>empty();
+				}).orElseGet(Optional::empty);
 		} catch (IOException ex) {
 			log.error("Can not delete avatar file(s)", ex);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't get the avatar file", ex);
 		}
-		return Mono.just(Optional.empty());
 	}
 
 	@Override
-	public Mono<String> saveAvatar(Mono<FilePart> filePartMono) {
+	public String saveAvatar(MultipartFile multipartFile) {
 		Path path = Paths.get(pathString);
 		try {
-			Files.createDirectories(path);
-			return filePartMono
-				.flatMap(filePart -> {
-					String[] split = filePart.filename().split("\\.");
-					String fileExtension = split[split.length - 1];
-					String filename = userInfoService.getUserInfo().id();
-					return filePart.transferTo(path.resolve(String.format("%s.%s", filename, fileExtension))).then(Mono.just(filename));
-				});
+			if (!Files.exists(path)) {
+				Files.createDirectories(path);
+			}
+			String[] split = multipartFile.getOriginalFilename().split("\\.");
+			String fileExtension = split[split.length - 1];
+			String filename = userInfoService.getUserInfo().id();
+			multipartFile.transferTo(path.resolve(String.format("%s.%s", filename, fileExtension)));
+			return filename;
 		} catch (IOException ex) {
 			throw new ResponseStatusException(
 				HttpStatus.INTERNAL_SERVER_ERROR,
-				"Can't create directory to save files: " + ex.getMessage(),
+				"Can't save file to directory: " + ex.getMessage(),
 				ex
 			);
 		}
 	}
 
 	@Override
-	public Mono<Void> deleteAvatar() {
+	public void deleteAvatar() {
 		try (Stream<Path> list = Files.list(Paths.get(pathString))) {
 			list.filter(p -> p.toFile().isFile() && p.getFileName().toString().startsWith(userInfoService.getUserInfo().id()))
 				.forEach(p -> {
@@ -102,24 +94,23 @@ public class FileAvatarServiceImpl implements AvatarService {
 		} catch (IOException ex) {
 			log.error("Can not delete avatar file(s)", ex);
 		}
-		return Mono.empty();
 	}
 
 	@Override
-	public Mono<AvatarDTO> getDefaultAvatar() {
+	public Optional<AvatarDTO> getDefaultAvatar() {
 		try {
-			File file = new File(this.getClass().getResource("/static/images/default_avatar.jpg").getFile());
-			return Mono.just(new AvatarDTO(userInfoService.getUserInfo().id(), Files.probeContentType(file.toPath()),
-				DataBufferUtils.read(file.toPath(), new DefaultDataBufferFactory(), getBufferSize()))
+			File file = ResourceUtils.getFile("/static/images/default_avatar.jpg");
+			return Optional.of(
+				new AvatarDTO(
+					userInfoService.getUserInfo().id(),
+					Files.probeContentType(file.toPath()),
+					Files.readAllBytes(file.toPath())
+				)
 			);
 		} catch (IOException | NullPointerException ex) {
 			log.error("Can not load default user avatar file", ex);
 		}
-		return Mono.empty();
-	}
-
-	private int getBufferSize() {
-		return 64 * 1024;
+		return Optional.empty();
 	}
 }
 
