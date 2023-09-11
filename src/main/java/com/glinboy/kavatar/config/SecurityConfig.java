@@ -1,14 +1,16 @@
 package com.glinboy.kavatar.config;
 
+import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebFluxSecurity
 public class SecurityConfig {
 	private final String[] authWhitelist = {
 		"/",
@@ -21,16 +23,19 @@ public class SecurityConfig {
 	};
 
 	@Bean
-	SecurityWebFilterChain filterChain(ServerHttpSecurity security) {
-		return security
-			.cors(Customizer.withDefaults())
-			.csrf(Customizer.withDefaults())
-			.authorizeExchange(exchanges ->
-				exchanges
-					.pathMatchers(authWhitelist).permitAll()
-					.anyExchange().authenticated()
+	@SneakyThrows
+	SecurityFilterChain filterChain(HttpSecurity http) {
+		return http
+			.cors(AbstractHttpConfigurer::disable)
+			.csrf(AbstractHttpConfigurer::disable)
+			.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+			.authorizeHttpRequests(request ->
+				request
+					.requestMatchers(authWhitelist).permitAll()
+					.anyRequest().authenticated()
 			)
 			.oauth2ResourceServer(it -> it.jwt(Customizer.withDefaults()))
+			.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.build();
 	}
 }
