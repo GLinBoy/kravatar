@@ -1,17 +1,18 @@
 package com.glinboy.kavatar.service;
 
 import com.glinboy.kavatar.service.dto.AvatarDTO;
-import org.springframework.http.codec.multipart.FilePart;
-import reactor.core.publisher.Mono;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
 public interface AvatarService {
-	Mono<Optional<AvatarDTO>> getAvatar();
-	Mono<Optional<AvatarDTO>> getAvatar(String id);
-	Mono<String> saveAvatar(Mono<FilePart> filePartMono);
+	Optional<AvatarDTO> getAvatar();
 
-	Mono<Void> deleteAvatar();
+	Optional<AvatarDTO> getAvatar(String id);
 
-	Mono<AvatarDTO> getDefaultAvatar();
+	String saveAvatar(MultipartFile multipartFile);
+
+	void deleteAvatar();
+
+	Optional<AvatarDTO> getDefaultAvatar();
 }
