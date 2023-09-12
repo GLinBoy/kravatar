@@ -1,5 +1,6 @@
 package com.glinboy.kavatar.service.impl;
 
+import com.glinboy.kavatar.entity.Avatar;
 import com.glinboy.kavatar.repository.AvatarRepository;
 import com.glinboy.kavatar.service.AvatarService;
 import com.glinboy.kavatar.service.UserInfoService;
@@ -7,9 +8,11 @@ import com.glinboy.kavatar.service.dto.AvatarDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +30,7 @@ public class MongoAvatarServiceImpl implements AvatarService {
 
 	@Override
 	public Optional<AvatarDTO> getAvatar() {
-		return null;
+		return getAvatar(userInfoService.getUserInfo().id());
 	}
 
 	@Override
