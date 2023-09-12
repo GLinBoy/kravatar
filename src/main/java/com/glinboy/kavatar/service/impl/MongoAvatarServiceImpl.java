@@ -37,9 +37,13 @@ public class MongoAvatarServiceImpl implements AvatarService {
 
 	@Override
 	public String saveAvatar(MultipartFile multipartFile) {
-		String userId = userInfoService.getUserInfo().id();
-
-		return userId;
+		try {
+			String userId = userInfoService.getUserInfo().id();
+			repository.save(new Avatar(userId, multipartFile.getContentType(), multipartFile.getBytes()));
+			return userId;
+		} catch (IOException ex) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can not get file content", ex);
+		}
 	}
 
 	@Override
