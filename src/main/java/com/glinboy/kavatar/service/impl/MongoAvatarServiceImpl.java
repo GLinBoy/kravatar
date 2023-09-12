@@ -32,7 +32,12 @@ public class MongoAvatarServiceImpl implements AvatarService {
 
 	@Override
 	public Optional<AvatarDTO> getAvatar(String id) {
-		return null;
+		return repository.findById(id)
+			.map(a -> new AvatarDTO(id, a.getFileType(), a.getFileContent()))
+			.map(Optional::of)
+			.orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Can not found avatar for user ID: ".concat(id))
+			);
 	}
 
 	@Override
