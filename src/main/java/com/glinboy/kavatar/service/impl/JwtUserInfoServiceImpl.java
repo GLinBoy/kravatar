@@ -7,6 +7,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class JwtUserInfoServiceImpl implements UserInfoService {
 	@Override
@@ -18,9 +21,14 @@ public class JwtUserInfoServiceImpl implements UserInfoService {
 			(String) jwt.getClaims().get("sub"),
 			(String) jwt.getClaims().get("given_name"),
 			(String) jwt.getClaims().get("family_name"),
-			(String) jwt.getClaims().get("name"),
 			(String) jwt.getClaims().get("preferred_username"),
-			(String) jwt.getClaims().get("email")
+			(String) jwt.getClaims().get("email"),
+			(Boolean) jwt.getClaims().get("email_verified"),
+			0L,
+			Map.of(),
+			List.of(),
+			List.of(),
+			Map.of()
 		);
 	}
 }
