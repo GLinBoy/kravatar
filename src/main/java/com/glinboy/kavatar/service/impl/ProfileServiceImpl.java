@@ -26,23 +26,9 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public Optional<UserInfoDTO> getProfile() {
-		UserRepresentation representation = keycloak.realm("oauth-realm")
-			.users()
-			.get(userInfoService.getUserInfo().id())
-			.toRepresentation();
-		return Optional.of(new UserInfoDTO(
-			representation.getId(),
-			representation.getFirstName(),
-			representation.getLastName(),
-			representation.getUsername(),
-			representation.getEmail(),
-			representation.isEmailVerified(),
-			representation.getCreatedTimestamp(),
-			representation.getAttributes(),
-			representation.getGroups(),
-			representation.getRealmRoles(),
-			representation.getClientRoles()
-		));
+		return getProfile(userInfoService.getUserInfo().id());
+	}
+
 	@Override
 	public Optional<UserInfoDTO> getProfile(String id) {
 		try {
