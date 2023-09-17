@@ -14,7 +14,6 @@ services:
       - KC_DB=dev-file
       - KEYCLOAK_ADMIN=${DEFAULT_USERNAME_DEV}
       - KEYCLOAK_ADMIN_PASSWORD=${DEFAULT_PASSWORD_DEV}
-      - KC_FEATURES=scripts
       - KC_HTTP_PORT=8080
     ports:
       - "8080:8080"
