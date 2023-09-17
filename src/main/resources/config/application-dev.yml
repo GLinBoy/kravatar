@@ -40,4 +40,4 @@ application:
       server-url: http://localhost:8080
       realm: oauth-realm
       client-id: kavatar-client
-      client-secret: nQgwm0nTUAoz30bLtcrJNR8CJrHgP9vG
+      client-secret: whlD4v3NCJ3NFIlvv7wreXGHUQ6EtMsW
