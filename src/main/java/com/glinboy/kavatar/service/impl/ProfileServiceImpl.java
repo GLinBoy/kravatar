@@ -32,6 +32,7 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
+	@Cacheable(value = "profile", key = "#id", unless = "#result != null")
 	public Optional<UserInfoDTO> getProfile(String id) {
 		try {
 			UserRepresentation representation = keycloak.realm(realm)
