@@ -8,6 +8,7 @@ import com.glinboy.kavatar.service.dto.AvatarDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -29,6 +30,7 @@ public class MongoAvatarServiceImpl implements AvatarService {
 	private final UserInfoService userInfoService;
 
 	@Override
+	@Cacheable(value = "avatar", key = "#result.userId()", unless = "#result != null")
 	public Optional<AvatarDTO> getAvatar() {
 		return getAvatar(userInfoService.getUserInfo().id());
 	}
