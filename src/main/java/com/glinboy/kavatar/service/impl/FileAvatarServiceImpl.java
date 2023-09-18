@@ -43,6 +43,7 @@ public class FileAvatarServiceImpl implements AvatarService {
 	}
 
 	@Override
+	@Cacheable(value = "avatar", key = "#id", unless = "#result != null")
 	public Optional<AvatarDTO> getAvatar(String id) {
 		try (Stream<Path> list = Files.list(Paths.get(pathString))) {
 			return list.filter(p -> p.toFile().isFile() && p.getFileName().toString().startsWith(id))
