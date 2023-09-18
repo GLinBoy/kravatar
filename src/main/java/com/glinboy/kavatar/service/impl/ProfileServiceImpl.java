@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,6 +26,7 @@ public class ProfileServiceImpl implements ProfileService {
 	private String realm;
 
 	@Override
+	@Cacheable(value = "profile", key = "#result.id()", unless = "#result != null")
 	public Optional<UserInfoDTO> getProfile() {
 		return getProfile(userInfoService.getUserInfo().id());
 	}
