@@ -36,6 +36,7 @@ public class MongoAvatarServiceImpl implements AvatarService {
 	}
 
 	@Override
+	@Cacheable(value = "avatar", key = "#id", unless = "#result != null")
 	public Optional<AvatarDTO> getAvatar(String id) {
 		return repository.findById(id)
 			.map(a -> new AvatarDTO(id, a.getFileType(), a.getFileContent()))
