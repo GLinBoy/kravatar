@@ -51,4 +51,26 @@ public class ProfileResource {
 			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	@GetMapping(value = "/{id}.vcf", produces = "text/x-vcard")
+	public ResponseEntity<InputStreamResource> getProfileVcf(@PathVariable String id) {
+		return service.getProfile(id)
+			.map(p -> {
+				VCard vCard = new VCard();
+				StructuredName n = new StructuredName();
+				n.setFamily(p.family());
+				n.setGiven(p.name());
+				vCard.setStructuredName(n);
+				return new InputStreamResource(
+					new ByteArrayInputStream(
+						Ezvcard
+							.write(vCard)
+							.go()
+							.getBytes(StandardCharsets.UTF_8)
+					)
+				);
+			})
+			.map(ResponseEntity::ok)
+			.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
 }
