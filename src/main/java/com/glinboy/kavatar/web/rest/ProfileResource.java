@@ -43,4 +43,12 @@ public class ProfileResource {
 			.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+
+	@GetMapping(value = "/{id}.xml", produces = MediaType.APPLICATION_XML_VALUE)
+	public ResponseEntity<UserInfoDTO> getProfileXml(@PathVariable String id) {
+		return service.getProfile(id)
+			.map(ResponseEntity::ok)
+			.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
 }
