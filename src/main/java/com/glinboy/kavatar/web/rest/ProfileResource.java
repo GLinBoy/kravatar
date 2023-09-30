@@ -2,14 +2,12 @@ package com.glinboy.kavatar.web.rest;
 
 import com.glinboy.kavatar.service.ProfileService;
 import com.glinboy.kavatar.service.dto.UserInfoDTO;
+import com.glinboy.kavatar.util.GeneratorUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import ezvcard.Ezvcard;
-import ezvcard.VCard;
-import ezvcard.property.StructuredName;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -22,10 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,21 +54,9 @@ public class ProfileResource {
 	@GetMapping(value = "/{id}.vcf", produces = "text/x-vcard")
 	public ResponseEntity<InputStreamResource> getProfileVcf(@PathVariable String id) {
 		return service.getProfile(id)
-			.map(p -> {
-				VCard vCard = new VCard();
-				StructuredName n = new StructuredName();
-				n.setFamily(p.family());
-				n.setGiven(p.name());
-				vCard.setStructuredName(n);
-				return new InputStreamResource(
-					new ByteArrayInputStream(
-						Ezvcard
-							.write(vCard)
-							.go()
-							.getBytes(StandardCharsets.UTF_8)
-					)
-				);
-			})
+			.map(GeneratorUtils::vCardGenerate)
+			.filter(Optional::isPresent)
+			.map(Optional::get)
 			.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
