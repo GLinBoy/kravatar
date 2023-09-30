@@ -30,12 +30,6 @@ public class MongoAvatarServiceImpl implements AvatarService {
 	private final UserInfoService userInfoService;
 
 	@Override
-	@Cacheable(value = "avatar", key = "#result.userId()", unless = "#result != null")
-	public Optional<AvatarDTO> getAvatar() {
-		return getAvatar(userInfoService.getUserInfo().id());
-	}
-
-	@Override
 	@Cacheable(value = "avatar", key = "#id", unless = "#result != null")
 	public Optional<AvatarDTO> getAvatar(String id) {
 		return repository.findById(id)
