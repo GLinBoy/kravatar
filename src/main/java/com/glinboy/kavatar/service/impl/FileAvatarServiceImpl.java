@@ -33,14 +33,9 @@ import java.util.stream.Stream;
 public class FileAvatarServiceImpl implements AvatarService {
 
 	private final UserInfoService userInfoService;
+
 	@Value("${application.avatars.path}")
 	private String pathString;
-
-	@Override
-	@Cacheable(value = "avatar", key = "#result.userId()", unless = "#result != null")
-	public Optional<AvatarDTO> getAvatar() {
-		return getAvatar(userInfoService.getUserInfo().id());
-	}
 
 	@Override
 	@Cacheable(value = "avatar", key = "#id", unless = "#result != null")
