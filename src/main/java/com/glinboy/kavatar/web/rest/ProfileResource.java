@@ -1,6 +1,7 @@
 package com.glinboy.kavatar.web.rest;
 
 import com.glinboy.kavatar.service.ProfileService;
+import com.glinboy.kavatar.service.UserInfoService;
 import com.glinboy.kavatar.service.dto.UserInfoDTO;
 import com.glinboy.kavatar.util.GeneratorUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,11 +20,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/api/profiles")
 public class ProfileResource {
+
 	private final ProfileService service;
+	private final UserInfoService userInfoService;
 
 	@GetMapping
 	public ResponseEntity<UserInfoDTO> getProfile() {
-		return service.getProfile()
+		return service.getProfile(userInfoService.getUserInfo().id())
 			.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
