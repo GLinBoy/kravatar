@@ -9,11 +9,9 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.property.StructuredName;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,21 +21,18 @@ public final class GeneratorUtils {
 	private GeneratorUtils() {
 	}
 
-	public static Optional<InputStreamResource> vCardGenerate(UserInfoDTO userInfoDTO) {
+	public static Optional<byte[]> vCardGenerate(UserInfoDTO userInfoDTO) {
 		return Optional.ofNullable(userInfoDTO).map(p -> {
 				VCard vCard = new VCard();
 				StructuredName n = new StructuredName();
 				n.setFamily(p.family());
 				n.setGiven(p.name());
 				vCard.setStructuredName(n);
-				return Optional.of(new InputStreamResource(
-					new ByteArrayInputStream(
-						Ezvcard
+				return Optional.of(Ezvcard
 							.write(vCard)
 							.go()
 							.getBytes(StandardCharsets.UTF_8)
-					)
-				));
+					);
 			})
 			.orElseGet(Optional::empty);
 	}
