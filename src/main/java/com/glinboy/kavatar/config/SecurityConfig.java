@@ -3,6 +3,7 @@ package com.glinboy.kavatar.config;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,6 +32,7 @@ public class SecurityConfig {
 			.authorizeHttpRequests(request ->
 				request
 					.requestMatchers(authWhitelist).permitAll()
+					.requestMatchers(HttpMethod.GET, "/{id}").permitAll()
 					.anyRequest().authenticated()
 			)
 			.oauth2ResourceServer(it -> it.jwt(Customizer.withDefaults()))
