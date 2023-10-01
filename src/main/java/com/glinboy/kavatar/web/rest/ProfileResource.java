@@ -46,7 +46,7 @@ public class ProfileResource {
 	}
 
 	@GetMapping(value = "/{id}.vcf", produces = "text/x-vcard")
-	public ResponseEntity<InputStreamResource> getProfileVcf(@PathVariable String id) {
+	public ResponseEntity<byte[]> getProfileVcf(@PathVariable String id) {
 		return service.getProfile(id)
 			.map(GeneratorUtils::vCardGenerate)
 			.filter(Optional::isPresent)
