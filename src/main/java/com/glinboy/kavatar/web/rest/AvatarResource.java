@@ -1,6 +1,7 @@
 package com.glinboy.kavatar.web.rest;
 
 import com.glinboy.kavatar.service.AvatarService;
+import com.glinboy.kavatar.service.UserInfoService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,11 @@ import java.net.URI;
 public class AvatarResource {
 
 	private final AvatarService service;
+	private final UserInfoService userInfoService;
 
 	@GetMapping
 	public ResponseEntity<byte[]> getAvatar() {
-		return service.getAvatar()
+		return service.getAvatar(userInfoService.getUserInfo().id())
 			.map(avatarDTO ->
 				ResponseEntity.ok().contentType(MediaType.valueOf(avatarDTO.fileType())).body(avatarDTO.fileContent())
 			).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
