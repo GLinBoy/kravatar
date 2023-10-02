@@ -6,16 +6,18 @@ import com.glinboy.kavatar.service.dto.UserInfoDTO;
 import com.glinboy.kavatar.util.GeneratorUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/profiles")
@@ -57,9 +59,12 @@ public class ProfileResource {
 
 	@GetMapping(value = "/{id}.qr", produces = MediaType.IMAGE_PNG_VALUE)
 	public ResponseEntity<byte[]> getProfileQr(@PathVariable String id, HttpServletRequest request) {
-		// FIXME Generate QR to redirect to user profile page
 		return GeneratorUtils
-			.qrGenerate(request.getRequestURL().toString().replace(".qr", ""))
+			.qrGenerate("%s/%s".formatted(ServletUriComponentsBuilder
+				.fromRequestUri(request)
+				.replacePath(null)
+				.build()
+				.toUriString(), id))
 			.map(v ->
 				ResponseEntity
 					.ok()
