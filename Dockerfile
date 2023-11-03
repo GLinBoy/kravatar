@@ -8,7 +8,7 @@ COPY src src
 RUN ./mvnw clean package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../kavatar-*.jar)
 
-FROM eclipse-temurin:20-jre-alpine AS runner
+FROM eclipse-temurin:21-jre-alpine AS runner
 VOLUME /tmp
 
 RUN addgroup -S app && adduser -S spring-app -G app
