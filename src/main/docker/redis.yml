@@ -3,7 +3,7 @@ name: redis-dev
 services:
   kavatar-redis-dev:
     container_name: kavatar-redis-dev-container
-    image: redis:7.0.10-alpine3.17
+    image: redis:7.2.3-alpine3.18
     ports:
       - "6379:6379"
     command: redis-server --loglevel warning --requirepass ${DEFAULT_PASSWORD_DEV}
