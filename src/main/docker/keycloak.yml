@@ -3,10 +3,10 @@ name: kavatar-keycloak-dev
 services:
   kavatar-keycloak-dev:
     container_name: kavatar-keycloak-dev-container
-    image: quay.io/keycloak/keycloak:22.0.5
+    image: quay.io/keycloak/keycloak:23.0.1
     command:
       [
-        'start-dev --import-realm'
+        'start-dev', '--import-realm'
       ]
     volumes:
       - ./realm-config:/opt/keycloak/data/import
