@@ -16,7 +16,7 @@ services:
 
   kavatar-mongo-express-dev:
     container_name: kavatar-mongo-express-dev-container
-    image: mongo-express:1.0.0-alpha.4
+    image: mongo-express:1.0.0-18-alpine3.18
     ports:
       - "27018:8081"
     environment:
