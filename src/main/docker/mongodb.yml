@@ -3,7 +3,7 @@ name: mongodb-dev
 services:
   kavatar-mongodb-dev:
     container_name: kavatar-mongo-dev-container
-    image: mongo:7.0.6
+    image: mongo:7.0.8
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DEFAULT_USERNAME_DEV}
       MONGO_INITDB_ROOT_PASSWORD: ${DEFAULT_PASSWORD_DEV}
