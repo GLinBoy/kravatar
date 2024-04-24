@@ -27,8 +27,6 @@ services:
       ME_CONFIG_MONGODB_PORT: 27017
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${DEFAULT_USERNAME_DEV}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${DEFAULT_PASSWORD_DEV}
-    depends_on:
-      - kavatar-mongodb-dev
     restart: unless-stopped
     networks:
       - kravatar-dev-network
