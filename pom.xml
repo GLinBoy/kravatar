@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>22</java.version>
 		<editorconfig.version>0.1.3</editorconfig.version>
-		<springdoc-openapi.version>2.5.0</springdoc-openapi.version>
+		<springdoc-openapi.version>2.6.0</springdoc-openapi.version>
 		<keycloak.version>24.0.4</keycloak.version>
 		<ez-vcard.version>0.12.1</ez-vcard.version>
 		<zxing.version>3.5.3</zxing.version>
