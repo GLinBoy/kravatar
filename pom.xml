@@ -14,10 +14,11 @@
 	<name>kavatar</name>
 	<description>A user profile service for Keycloak</description>
 	<properties>
-		<java.version>22</java.version>
+		<java.version>23</java.version>
+		<maven.compiler.proc>full</maven.compiler.proc>
 		<editorconfig.version>0.1.3</editorconfig.version>
 		<springdoc-openapi.version>2.6.0</springdoc-openapi.version>
-		<keycloak.version>26.0.5</keycloak.version>
+		<keycloak.version>26.0.3</keycloak.version>
 		<ez-vcard.version>0.12.1</ez-vcard.version>
 		<zxing.version>3.5.3</zxing.version>
 	</properties>
